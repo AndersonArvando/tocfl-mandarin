@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Latihan Bab 9: 放假去哪裡玩?</title>
+    <style>
+        :root {
+            --primary: #4A90E2;
+            --bg-color: #F5F7FA;
+            --card-bg: #FFFFFF;
+            --text-main: #333333;
+            --text-muted: #666666;
+            --correct: #2ECC71;
+            --incorrect: #E74C3C;
+            --warning: #F39C12;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            padding: 20px 15px;
+            padding-bottom: 100px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 5px;
+            font-size: 24px;
+            color: var(--primary);
+        }
+        
+        .subtitle {
+            text-align: center;
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: 30px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .question-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeIn 0.4s forwards;
+            border: 2px solid transparent;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .question-header {
+            font-size: 13px;
+            font-weight: bold;
+            color: var(--primary);
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            letter-spacing: 0.5px;
+        }
+
+        .question-text {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+
+        .hint-text {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: 15px;
+            font-style: italic;
+            background: #eef5fb;
+            padding: 8px 12px;
+            border-radius: 6px;
+            border-left: 4px solid var(--primary);
+        }
+
+        /* Form elements optimized for iOS */
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 12px 15px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            outline: none;
+            transition: border 0.3s;
+            appearance: none;
+            -webkit-appearance: none;
+            margin-bottom: 10px;
+        }
+
+        input[type="text"]:focus, textarea:focus {
+            border-color: var(--primary);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .mcq-option {
+            display: block;
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            background: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+            font-size: 16px;
+            touch-action: manipulation;
+        }
+
+        .mcq-option:active {
+            background: #ebebeb;
+        }
+        
+        .mcq-option.selected {
+            background: #e6f0fa;
+            border-color: var(--primary);
+            font-weight: bold;
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #fff;
+            background-color: var(--primary);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            appearance: none;
+            -webkit-appearance: none;
+            touch-action: manipulation;
+            margin-top: 15px;
+            box-shadow: 0 4px 10px rgba(74, 144, 226, 0.3);
+            transition: transform 0.1s, background-color 0.2s;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+            background-color: #357ABD;
+        }
+        
+        .btn:disabled {
+            background-color: #cccccc;
+            box-shadow: none;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .btn-small {
+            padding: 8px 12px;
+            font-size: 14px;
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            -webkit-appearance: none;
+        }
+
+        /* Review Styles */
+        .status-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: bold;
+            margin-top: 10px;
+            color: white;
+        }
+        .correct-bg { background-color: var(--correct); }
+        .incorrect-bg { background-color: var(--incorrect); }
+        .manual-bg { background-color: var(--warning); }
+        
+        .correct-answer-box {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #fdf2f2;
+            border-left: 4px solid var(--incorrect);
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .manual-answer-box {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #fcf8e3;
+            border-left: 4px solid var(--warning);
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="top-bar">
+        <span id="progress-text" style="font-weight:bold; color:var(--text-muted); line-height: 30px;">Soal 1 / 30</span>
+        <button class="btn-small" onclick="resetProgress()">Mulai Ulang</button>
+    </div>
+    
+    <h1>Latihan Bab 9</h1>
+    <div class="subtitle">放假去哪裡玩? (Where Will You Go for the Holidays?)</div>
+
+    <div id="game-board"></div>
+</div>
+
+<script>
+    const questions = [
+        // 1-6: Sentence Reordering (重組句子)
+        { id: 1, type: 'text', category: '重組句子 - Menyusun Kata', text: '下個 / 星期 / 我們 / 放假', hint: 'Petunjuk: Kami libur minggu depan.', answer: '我們下個星期放假' },
+        { id: 2, type: 'text', category: '重組句子 - Menyusun Kata', text: '打算 / 你 / 哪裡 / 去 / 玩', hint: 'Petunjuk: Ke mana kamu berencana pergi bermain?', answer: '你打算去哪裡玩' },
+        { id: 3, type: 'text', category: '重組句子 - Menyusun Kata', text: '有時候 / 我 / 在家 / 寫功課', hint: 'Petunjuk: Terkadang saya mengerjakan PR di rumah.', answer: '我有時候在家寫功課' },
+        { id: 4, type: 'text', category: '重組句子 - Menyusun Kata', text: '帶 / 決定 / 我 / 貓空 / 去 / 她', hint: 'Petunjuk: Saya memutuskan untuk membawanya (perempuan) ke Maokong.', answer: '我決定帶她去貓空' },
+        { id: 5, type: 'text', category: '重組句子 - Menyusun Kata', text: '夜市 / 臺灣 / 的 / 有名 / 很', hint: 'Petunjuk: Pasar malam Taiwan sangat terkenal.', answer: '臺灣的夜市很有名' },
+        { id: 6, type: 'text', category: '重組句子 - Menyusun Kata', text: '要是 / 就 / 有空 / 我 / 跟你 / 去 / 一起', hint: 'Petunjuk: Jika saya ada waktu, saya akan pergi bersamamu.', answer: '要是我有空我就跟你一起去' },
+
+        // 7-12: Tone Identification (選出正確的拼音)
+        { id: 7, type: 'mcq', category: '選出正確的拼音 - Identifikasi Nada Pinyin', text: '打算 (berencana)', options: ['dǎsuàn', 'dásuān', 'dǎsuān'], answer: 'dǎsuàn' },
+        { id: 8, type: 'mcq', category: '選出正確的拼音 - Identifikasi Nada Pinyin', text: '建議 (saran)', options: ['jiànyí', 'jiànyì', 'jiān yí'], answer: 'jiànyì' },
+        { id: 9, type: 'mcq', category: '選出正確的拼音 - Identifikasi Nada Pinyin', text: '夜市 (pasar malam)', options: ['yéshì', 'yèshì', 'yèshi'], answer: 'yèshì' },
+        { id: 10, type: 'mcq', category: '選出正確的拼音 - Identifikasi Nada Pinyin', text: '決定 (memutuskan)', options: ['juédìng', 'jüédìng', 'juédīng'], answer: 'juédìng' },
+        { id: 11, type: 'mcq', category: '選出正確的拼音 - Identifikasi Nada Pinyin', text: '旅行 (bepergian/travel)', options: ['lǚxíng', 'lǔxíng', 'lǚxìng'], answer: 'lǚxíng' },
+        { id: 12, type: 'mcq', category: '選出正確的拼音 - Identifikasi Nada Pinyin', text: '應該 (seharusnya)', options: ['yìnggāi', 'yīnggāi', 'yīnggǎi'], answer: 'yīnggāi' },
+
+        // 13-18: Grammar Particle Cloze (填空題)
+        { id: 13, type: 'text', category: '填空題 - Isian Rumpang Tata Bahasa', text: '放假______，我喜歡去逛夜市。', hint: 'Petunjuk: Gunakan partikel waktu untuk "Saat liburan..." (2 karakter)', answer: '的時候' },
+        { id: 14, type: 'text', category: '填空題 - Isian Rumpang Tata Bahasa', text: '______下個月不忙，她就回國。', hint: 'Petunjuk: Kata untuk "Jika..." (2 karakter)', answer: '要是' },
+        { id: 15, type: 'text', category: '填空題 - Isian Rumpang Tata Bahasa', text: '你要是星期日有空，你______跟我去旅行吧！', hint: 'Petunjuk: Pasangan dari "要是", berarti "maka/langsung" (1 karakter)', answer: '就' },
+        { id: 16, type: 'text', category: '填空題 - Isian Rumpang Tata Bahasa', text: '週末的時候，我______在家寫功課，有時候出去玩。', hint: 'Petunjuk: Kata untuk "Terkadang" (3 karakter)', answer: '有時候' },
+        { id: 17, type: 'text', category: '填空題 - Isian Rumpang Tata Bahasa', text: '這個電影很有意思，可是要看三個______。', hint: 'Petunjuk: Kata untuk "Jam / Hours" (2 karakter)', answer: '鐘頭' },
+        { id: 18, type: 'text', category: '填空題 - Isian Rumpang Tata Bahasa', text: '你決定在臺灣學多______的中文？', hint: 'Petunjuk: Kata untuk "Berapa lama" (1 karakter setelah 多)', answer: '久' },
+
+        // 19-24: Active Translation (Situational Production) - MANUAL REVIEW
+        { id: 19, type: 'textarea', category: 'Active Translation (Situational Production)', text: 'Ke mana kamu berencana pergi bermain untuk liburan?', hint: 'Petunjuk: Gunakan kata "放假", "打算", dan "哪裡". Ketik dengan Karakter Tradisional (繁體字).', answer: '你放假打算去哪裡玩' },
+        { id: 20, type: 'textarea', category: 'Active Translation (Situational Production)', text: 'Saya dengar pemandangan di Taitung sangat indah.', hint: 'Petunjuk: Gunakan kata "聽說", "臺東", dan "風景".', answer: '聽說臺東的風景非常漂亮' },
+        { id: 21, type: 'textarea', category: 'Active Translation (Situational Production)', text: 'Pasar malam Taiwan sangat terkenal, kalian harus pergi jalan-jalan.', hint: 'Petunjuk: Gunakan kata "夜市", "有名", dan "應該".', answer: '臺灣的夜市很有名你們應該去逛逛' },
+        { id: 22, type: 'textarea', category: 'Active Translation (Situational Production)', text: 'Jika saya ada waktu, saya akan pergi bersama kalian.', hint: 'Petunjuk: Gunakan struktur "要是...就...".', answer: '要是我有空我就跟你們一起去' },
+        { id: 23, type: 'textarea', category: 'Active Translation (Situational Production)', text: 'Terkadang saya tinggal di rumah untuk mengerjakan PR, terkadang saya keluar bermain.', hint: 'Petunjuk: Gunakan struktur "有時候...有時候...".', answer: '我有時候在家寫功課有時候出去玩' },
+        { id: 24, type: 'textarea', category: 'Active Translation (Situational Production)', text: 'Saya berencana belajar bahasa Mandarin di Taiwan selama sembilan bulan.', hint: 'Petunjuk: Perhatikan penempatan durasi waktu, "學九個月的中文".', answer: '我打算在臺灣學九個月的中文' },
+
+        // 25-30: Listening/Reading Comprehension (聽力測驗)
+        { id: 25, type: 'mcq', category: '聽力/閱讀測驗 - Latihan Menyimak (Teks 1)', text: 'Teks 1: 安同下個星期放五天的假。他不打算回國，他想跟朋友去臺東玩。聽說那裡的風景非常漂亮。<br><br>Pertanyaan: 安同下個星期放幾天的假？', options: ['三天', '四天', '五天'], answer: '五天' },
+        { id: 26, type: 'mcq', category: '聽力/閱讀測驗 - Latihan Menyimak (Teks 1)', text: 'Pertanyaan: 安同放假打算回國嗎？', options: ['打算回國', '不打算回國', '不知道'], answer: '不打算回國' },
+        { id: 27, type: 'mcq', category: '聽力/閱讀測驗 - Latihan Menyimak (Teks 1)', text: 'Pertanyaan: 安同覺得臺東怎麼樣？', options: ['風景很漂亮', '夜市很有名', '有很多茶館'], answer: '風景很漂亮' },
+        { id: 28, type: 'mcq', category: '聽力/閱讀測驗 - Latihan Menyimak (Teks 2)', text: 'Teks 2: 田中的女朋友九月三十號要來臺灣。明華建議他們去逛夜市。明華也覺得他們可以去貓空，因為那裡的風景很美。田中最後決定帶她去貓空。<br><br>Pertanyaan: 田中的女朋友什麼時候來臺灣？', options: ['八月三十號', '九月三十號', '十月三十號'], answer: '九月三十號' },
+        { id: 29, type: 'mcq', category: '聽力/閱讀測驗 - Latihan Menyimak (Teks 2)', text: 'Pertanyaan: 誰建議田中去逛夜市？', options: ['安同', '明華', '田中的女朋友'], answer: '明華' },
+        { id: 30, type: 'mcq', category: '聽力/閱讀測驗 - Latihan Menyimak (Teks 2)', text: 'Pertanyaan: 田中最後決定帶女朋友去哪裡？', options: ['夜市', '臺東', '貓空'], answer: '貓空' }
+    ];
+
+    let currentVisibleIndex = 0;
+    let userAnswers = {};
+    let isReviewMode = false;
+
+    // Load from local storage
+    if (localStorage.getItem('bab9_answers')) {
+        userAnswers = JSON.parse(localStorage.getItem('bab9_answers'));
+    }
+    if (localStorage.getItem('bab9_progress')) {
+        currentVisibleIndex = parseInt(localStorage.getItem('bab9_progress'));
+        if (currentVisibleIndex >= questions.length) {
+            currentVisibleIndex = questions.length - 1;
+            isReviewMode = localStorage.getItem('bab9_review') === 'true';
+        }
+    }
+
+    const board = document.getElementById('game-board');
+    const progressText = document.getElementById('progress-text');
+
+    function saveState() {
+        localStorage.setItem('bab9_answers', JSON.stringify(userAnswers));
+        localStorage.setItem('bab9_progress', currentVisibleIndex.toString());
+        localStorage.setItem('bab9_review', isReviewMode.toString());
+    }
+
+    function resetProgress() {
+        if(confirm('Apakah Anda yakin ingin menghapus semua progres dan mengulang dari awal?')) {
+            localStorage.clear();
+            location.reload();
+        }
+    }
+
+    function handleInput(qIndex, val) {
+        if(isReviewMode) return;
+        userAnswers[qIndex] = val;
+        saveState();
+        
+        // Auto-enable next button if value is provided
+        const nextBtn = document.getElementById(`next-btn-${qIndex}`);
+        if(nextBtn) {
+            nextBtn.disabled = val.trim() === '';
+        }
+    }
+
+    function renderBoard() {
+        board.innerHTML = '';
+        progressText.innerText = `Soal ${Math.min(currentVisibleIndex + 1, questions.length)} / ${questions.length}`;
+
+        for (let i = 0; i <= currentVisibleIndex; i++) {
+            const q = questions[i];
+            const card = document.createElement('div');
+            card.className = 'question-card';
+            card.id = `card-${i}`;
+
+            let html = `
+                <div class="question-header">Soal ${i + 1} | ${q.category}</div>
+                <div class="question-text">${q.text}</div>
+            `;
+
+            if (q.hint && !isReviewMode) {
+                html += `<div class="hint-text">${q.hint}</div>`;
+            }
+
+            const currentAns = userAnswers[i] || '';
+
+            // Input fields
+            if (q.type === 'text') {
+                html += `<input type="text" id="input-${i}" placeholder="Ketik jawaban di sini..." value="${currentAns}" ${isReviewMode ? 'disabled' : ''} oninput="handleInput(${i}, this.value)">`;
+            } else if (q.type === 'textarea') {
+                html += `<textarea id="input-${i}" placeholder="Ketik kalimat Mandarin di sini..." ${isReviewMode ? 'disabled' : ''} oninput="handleInput(${i}, this.value)">${currentAns}</textarea>`;
+            } else if (q.type === 'mcq') {
+                q.options.forEach(opt => {
+                    const isSelected = currentAns === opt;
+                    const selectedClass = isSelected ? 'selected' : '';
+                    html += `<div class="mcq-option ${selectedClass}" id="opt-${i}-${opt}" onclick="selectMCQ(${i}, '${opt}')">${opt}</div>`;
+                });
+            }
+
+            // Review Mode UI
+            if (isReviewMode) {
+                let isCorrect = false;
+                
+                // Clean punctuation for comparison
+                const cleanStr = (str) => str.replace(/[,.?!，。？！]/g, '').trim();
+                
+                if (q.type === 'mcq') {
+                    isCorrect = currentAns === q.answer;
+                } else {
+                    isCorrect = cleanStr(currentAns) === cleanStr(q.answer);
+                }
+
+                if (q.category.includes('Active Translation')) {
+                    // Manual review for active translation
+                    card.style.borderColor = "var(--warning)";
+                    html += `
+                        <div class="status-badge manual-bg">Perlu Penilaian Manual</div>
+                        <div class="manual-answer-box">
+                            <strong>Referensi Jawaban:</strong><br>${q.answer}
+                        </div>
+                    `;
+                } else {
+                    if (isCorrect) {
+                        card.style.borderColor = "var(--correct)";
+                        html += `<div class="status-badge correct-bg">Benar</div>`;
+                    } else {
+                        card.style.borderColor = "var(--incorrect)";
+                        html += `
+                            <div class="status-badge incorrect-bg">Salah</div>
+                            <div class="correct-answer-box">
+                                <strong>Jawaban yang Benar:</strong><br>${q.answer}
+                            </div>
+                        `;
+                    }
+                }
+            } else {
+                // Next Button
+                if (i === currentVisibleIndex) {
+                    if (i < questions.length - 1) {
+                        const isDisabled = currentAns.trim() === '' ? 'disabled' : '';
+                        html += `<button class="btn" id="next-btn-${i}" onclick="goNext()" ${isDisabled}>Lanjut ke Soal Berikutnya</button>`;
+                    } else {
+                        const isDisabled = currentAns.trim() === '' ? 'disabled' : '';
+                        html += `<button class="btn" id="next-btn-${i}" style="background-color: #2ECC71;" onclick="finishReview()" ${isDisabled}>Selesai & Cek Jawaban</button>`;
+                    }
+                }
+            }
+
+            card.innerHTML = html;
+            board.appendChild(card);
+        }
+
+        // Scroll to the latest question card smoothly
+        if (!isReviewMode) {
+            setTimeout(() => {
+                const latestCard = document.getElementById(`card-${currentVisibleIndex}`);
+                if (latestCard) {
+                    latestCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }, 100);
+        }
+    }
+
+    // Exposed to global scope for HTML inline calls
+    window.selectMCQ = function(qIndex, val) {
+        if (isReviewMode) return;
+        userAnswers[qIndex] = val;
+        saveState();
+        renderBoard(); // re-render to update selected styling
+    }
+
+    window.goNext = function() {
+        if (currentVisibleIndex < questions.length - 1) {
+            currentVisibleIndex++;
+            saveState();
+            renderBoard();
+        }
+    }
+
+    window.finishReview = function() {
+        if(confirm('Apakah Anda yakin ingin menyelesaikan dan melihat semua jawaban?')) {
+            isReviewMode = true;
+            saveState();
+            renderBoard();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    }
+
+    // Initial render
+    renderBoard();
+</script>
+
+</body>
+</html>

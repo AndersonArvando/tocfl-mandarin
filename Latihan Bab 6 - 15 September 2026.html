@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>第六課：他們學校在山上 (Latihan Bab 6)</title>
+    <style>
+        :root {
+            --primary: #4A90E2;
+            --secondary: #50E3C2;
+            --dark: #333333;
+            --light: #F8F9FA;
+            --danger: #E74C3C;
+            --success: #2ECC71;
+            --neutral: #F39C12;
+            --bg: #eef2f5;
+        }
+        
+        /* HACK KHUSUS IOS & TOUCH SCREEN */
+        html, body {
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+            font-family: 'PingFang TC', 'Microsoft JhengHei', 'Segoe UI', sans-serif;
+            background-color: var(--bg);
+            color: var(--dark);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        .header {
+            background-color: white;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header h1 {
+            color: var(--primary);
+            margin: 0 0 10px 0;
+            font-size: 1.5rem;
+        }
+
+        /* Pesan Whatsapp iOS */
+        #ios-warning {
+            background-color: var(--danger);
+            color: white;
+            padding: 15px;
+            margin: 15px;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1rem;
+            line-height: 1.4;
+            display: none;
+        }
+
+        #game-feed {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 0 15px;
+            padding-bottom: 50px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            padding: 25px;
+            margin-bottom: 25px;
+            position: relative;
+            animation: fadeIn 0.4s ease-in-out;
+            transition: all 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .q-type {
+            font-size: 0.85rem;
+            color: white;
+            background-color: var(--primary);
+            padding: 5px 10px;
+            border-radius: 5px;
+            display: inline-block;
+            margin-bottom: 12px;
+            font-weight: bold;
+        }
+
+        .q-hint {
+            font-size: 0.95rem;
+            color: #777;
+            margin-bottom: 15px;
+            font-style: italic;
+        }
+
+        .q-text {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            line-height: 1.4;
+            color: #222;
+        }
+
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        button {
+            padding: 15px;
+            font-size: 1.2rem;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            background-color: var(--light);
+            color: var(--dark);
+            font-family: inherit;
+            position: relative;
+            width: 100%;
+            -webkit-appearance: none;
+            appearance: none;
+            touch-action: manipulation;
+            user-select: none;
+        }
+
+        button:active:not(:disabled) {
+            opacity: 0.6;
+            transform: scale(0.98);
+        }
+
+        button.primary-btn { 
+            background-color: var(--primary); 
+            color: white; 
+            border: none; 
+            font-weight: bold; 
+            margin-top: 10px;
+        }
+
+        input[type="text"] {
+            padding: 15px;
+            font-size: 1.2rem; /* Cegah Auto-Zoom iOS */
+            width: calc(100% - 34px);
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-family: inherit;
+            margin-bottom: 10px;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        .feedback-box {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            display: none;
+        }
+
+        .fb-correct { background-color: #d5f5e3; color: #1e8449; }
+        .fb-wrong { background-color: #fadbd8; color: #c0392b; }
+        .fb-neutral { background-color: #fcf3cf; color: #b9770e; }
+
+        .disabled-element {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+
+        #review-container {
+            max-width: 800px;
+            margin: 20px auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            padding: 30px 20px;
+            display: none;
+        }
+
+        .review-item {
+            border-bottom: 1px solid #ddd;
+            padding: 15px 0;
+        }
+
+        .review-item:last-child { border-bottom: none; }
+        .r-q { font-weight: bold; font-size: 1.2rem; margin-bottom: 5px; }
+        .r-ans { margin-bottom: 5px; font-size: 1.1rem;}
+        .r-correct { color: var(--success); font-weight: bold; }
+        .r-wrong { color: var(--danger); font-weight: bold; }
+        .r-neutral { color: var(--neutral); font-weight: bold; }
+        .r-correct-ans { font-size:0.9rem; color:#555; background:#f9f9f9; padding:8px; border-radius:4px; margin-top:5px;}
+
+    </style>
+</head>
+<body ontouchstart="">
+
+    <div class="header">
+        <h1>第六課：他們學校在山上</h1>
+        <div id="progress-text" style="color: #666; font-weight: bold; font-size: 0.9rem;">Memuat Data...</div>
+    </div>
+
+    <!-- Peringatan WhatsApp Webview IOS -->
+    <div id="ios-warning">
+        ⚠️ Buka file ini menggunakan aplikasi <b>Safari</b> agar tombol dapat berfungsi. Tekan tombol Bagikan/Share lalu pilih "Open in Safari".
+    </div>
+
+    <div id="game-feed"></div>
+
+    <div id="review-container">
+        <h2 style="color: var(--primary); text-align: center;">Ringkasan Latihan Bab 6</h2>
+        <h1 id="final-score" style="text-align: center; color: var(--dark); font-size: 3rem; margin: 10px 0;"></h1>
+        <p style="text-align: center; color: #777; font-size: 0.9rem; margin-bottom:20px;">*Terjemahan Kontekstual tidak masuk dalam perhitungan skor baku.</p>
+        <div id="review-list"></div>
+        <button class="primary-btn" id="btn-restart" style="margin-top: 30px;">Hapus Data & Ulangi Latihan</button>
+    </div>
+
+<script>
+    const TYPE_REORDER = "Menyusun Kata";
+    const TYPE_PINYIN = "Identifikasi Nada Pinyin";
+    const TYPE_CLOZE = "Isian Tata Bahasa";
+    const TYPE_TRANS = "Terjemahan Kontekstual";
+
+    // Kunci Penyimpanan Session
+    const SESSION_KEY = "mandarin_bab6_progress";
+
+    const questions = [
+        // 1-8: Menyusun Kata
+        { type: TYPE_REORDER, hint: "Susun kata acak ini menjadi kalimat yang benar.", q: "在 / 花蓮 / 的 / 他們 / 山上 / 學校", ans: ["他們學校在花蓮的山上"] },
+        { type: TYPE_REORDER, hint: "Susun kata acak ini menjadi kalimat yang benar.", q: "遠 / 學校  / 你們 / 真", ans: ["你們學校真遠"] },
+        { type: TYPE_REORDER, hint: "Susun kata acak ini menjadi kalimat yang benar.", q: "裡面 / 沒有 / 餐廳 / 學校", ans: ["學校裡面沒有餐廳"] },
+        { type: TYPE_REORDER, hint: "Susun kata acak ini menjadi kalimat yang benar.", q: "一樓 / 的 / 學生宿舍 / 餐廳 / 在", ans: ["餐廳在學生宿舍的一樓"] },
+        { type: TYPE_REORDER, hint: "Susun kata acak ini menjadi kalimat yang benar.", q: "後面 / 游泳池 / 有 / 圖書館 / 的", ans: ["圖書館的後面有游泳池", "圖書館後面有游泳池"] },
+        { type: TYPE_REORDER, hint: "Susun kata acak ini menjadi kalimat yang benar.", q: "喝 / 在 / 樓下 / 咖啡 / 不是 / 我們", ans: ["我們不是在樓下喝咖啡"] },
+        { type: TYPE_REORDER, hint: "Susun kata acak ini menjadi kalimat yang benar.", q: "大樓 / 很 / 漂亮 / 前面 / 這棟", ans: ["前面這棟大樓很漂亮", "這棟前面的大樓很漂亮"] },
+        { type: TYPE_REORDER, hint: "Susun kata acak ini menjadi kalimat yang benar.", q: "外面 / 買 / 在 / 這裡 / 東西 / 學生 / 學校 / 的", ans: ["這裡的學生在學校外面買東西"] },
+
+        // 9-16: Identifikasi Nada Pinyin
+        { type: TYPE_PINYIN, hint: "Pilih ejaan Pinyin dengan nada yang tepat.", q: "遠 (Jauh)", options: ["yuǎn", "yuán", "yuàn"], ans: 0 },
+        { type: TYPE_PINYIN, hint: "Pilih ejaan Pinyin dengan nada yang tepat.", q: "附近 (Sekitar / Di dekat)", options: ["fùjìn", "fǔjīn", "fūjìn"], ans: 0 },
+        { type: TYPE_PINYIN, hint: "Pilih ejaan Pinyin dengan nada yang tepat.", q: "漂亮 (Cantik)", options: ["piàoliàng", "piāoliang", "piǎoliàng"], ans: 0 },
+        { type: TYPE_PINYIN, hint: "Pilih ejaan Pinyin dengan nada yang tepat.", q: "方便 (Mudah / Praktis)", options: ["fángbiān", "fāngbiàn", "fǎngbiàn"], ans: 1 },
+        { type: TYPE_PINYIN, hint: "Pilih ejaan Pinyin dengan nada yang tepat.", q: "宿舍 (Asrama)", options: ["sùshè", "sǔshè", "sùshě"], ans: 0 },
+        { type: TYPE_PINYIN, hint: "Pilih ejaan Pinyin dengan nada yang tepat.", q: "教室 (Ruang kelas)", options: ["jiāoshì", "jiáoshì", "jiàoshì"], ans: 2 },
+        { type: TYPE_PINYIN, hint: "Pilih ejaan Pinyin dengan nada yang tepat.", q: "圖書館 (Perpustakaan)", options: ["túshūguǎn", "tūshūguǎn", "tùshūguǎn"], ans: 0 },
+        { type: TYPE_PINYIN, hint: "Pilih ejaan Pinyin dengan nada yang tepat.", q: "游泳池 (Kolam renang)", options: ["yóuyǒngchí", "yōuyǒngchí", "yòuyǒngchí"], ans: 0 },
+
+        // 17-24: Isian Rumpang Tata Bahasa
+        { type: TYPE_CLOZE, hint: "Ketik 1 karakter Hanzi untuk mengisi bagian yang kosong.", q: "他們學校____花蓮的山上。 (berada di)", ans: ["在"] },
+        { type: TYPE_CLOZE, hint: "Ketik 1 karakter Hanzi untuk mengisi bagian yang kosong.", q: "學校裡面沒____餐廳。 (tidak ada)", ans: ["有"] },
+        { type: TYPE_CLOZE, hint: "Ketik 1 karakter Hanzi untuk mengisi bagian yang kosong.", q: "餐廳在學生宿舍____一樓。 (partikel penanda lokasi/milik)", ans: ["的"] },
+        { type: TYPE_CLOZE, hint: "Ketik 1 karakter Hanzi untuk mengisi bagian yang kosong.", q: "我想去學校看____。 (mengulang kata kerja agar terdengar lebih santai)", ans: ["看"] },
+        { type: TYPE_CLOZE, hint: "Ketik 1 karakter Hanzi untuk mengisi bagian yang kosong.", q: "哥哥不在學校裡____。 (di dalam)", ans: ["面", "邊"] },
+        { type: TYPE_CLOZE, hint: "Ketik 1 karakter Hanzi untuk mengisi bagian yang kosong.", q: "圖書館在咖啡店的旁____。 (di sebelah)", ans: ["邊", "面"] },
+        { type: TYPE_CLOZE, hint: "Ketik 1 karakter Hanzi untuk mengisi bagian yang kosong.", q: "我們____是在樓下喝咖啡，我們在樓上喝咖啡。 (bukan/menyangkal pernyataan)", ans: ["不"] },
+        { type: TYPE_CLOZE, hint: "Ketik 1 karakter Hanzi untuk mengisi bagian yang kosong.", q: "你家附近____沒有好吃的餐廳？ (apakah ada atau tidak)", ans: ["有"] },
+
+        // 25-30: Terjemahan Kontekstual
+        { type: TYPE_TRANS, hint: "Ketik terjemahan kalimat ini dalam Hanzi Tradisional.", q: "Tanyakan kepada teman Anda: 'Apakah sekolah kalian jauh?'", ans: ["你們學校遠不遠", "你們學校遠嗎", "你們的學校遠不遠"] },
+        { type: TYPE_TRANS, hint: "Ketik terjemahan kalimat ini dalam Hanzi Tradisional.", q: "Beri tahu teman Anda: 'Di depan sekolah ada laut, di belakang ada gunung.'", ans: ["學校前面有海後面有山", "學校前面有海，後面有山"] },
+        { type: TYPE_TRANS, hint: "Ketik terjemahan kalimat ini dalam Hanzi Tradisional.", q: "Ajak teman Anda: 'Akhir pekan ini kita pergi bersama-sama, yuk!'", ans: ["我們這個週末一起去吧", "這個週末我們一起去吧"] },
+        { type: TYPE_TRANS, hint: "Ketik terjemahan kalimat ini dalam Hanzi Tradisional.", q: "Katakan: 'Saya pergi ke lantai bawah mencari teman.'", ans: ["我去樓下找朋友", "我要去樓下找朋友"] },
+        { type: TYPE_TRANS, hint: "Ketik terjemahan kalimat ini dalam Hanzi Tradisional.", q: "Katakan: 'Di dalam sekolah tidak ada toko.'", ans: ["學校裡面沒有商店"] },
+        { type: TYPE_TRANS, hint: "Ketik terjemahan kalimat ini dalam Hanzi Tradisional.", q: "Katakan: 'Gedung di depan ini sangat cantik.'", ans: ["前面這棟大樓很漂亮", "這棟前面的大樓很漂亮"] }
+    ];
+
+    // State Aplikasi
+    let state = {
+        currentQ: 0,
+        score: 0,
+        history: [] // Berisi { qIndex, rawVal, displayVal, isCorrect }
+    };
+
+    window.onload = function() {
+        // Deteksi jika dibuka di dalam WebView iOS (misal WhatsApp) dan berikan peringatan
+        var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+        var isSafari = /Safari/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent);
+        if(isIOS && !isSafari) {
+            document.getElementById("ios-warning").style.display = "block";
+        }
+
+        // Setup Tombol Ulangi
+        document.getElementById("btn-restart").addEventListener("click", function() {
+            sessionStorage.removeItem(SESSION_KEY);
+            location.reload();
+        });
+
+        // Load Session jika ada
+        const savedState = sessionStorage.getItem(SESSION_KEY);
+        if (savedState) {
+            try {
+                state = JSON.parse(savedState);
+            } catch(e) {
+                console.error("Gagal membaca session.");
+            }
+        }
+
+        renderAll();
+    };
+
+    function saveSession() {
+        sessionStorage.setItem(SESSION_KEY, JSON.stringify(state));
+    }
+
+    function normalizeText(txt) {
+        return txt.replace(/[\s。！？，、.!?]/g, '');
+    }
+
+    // Merender ulang layar berdasarkan state yang tersimpan
+    function renderAll() {
+        const feed = document.getElementById("game-feed");
+        feed.innerHTML = ""; // Bersihkan layar
+
+        // Render soal yang sudah dijawab dari history
+        state.history.forEach((record) => {
+            renderCard(record.qIndex, true, record);
+        });
+
+        // Jika belum selesai, render soal yang aktif sekarang
+        if (state.currentQ < questions.length) {
+            renderCard(state.currentQ, false, null);
+            updateProgressText();
+        } else {
+            // Langsung tampilkan hasil jika sudah selesai semua
+            showSummary();
+        }
+    }
+
+    function updateProgressText() {
+        document.getElementById("progress-text").innerText = `Mengerjakan: Soal ${state.currentQ + 1} dari ${questions.length}`;
+    }
+
+    // Fungsi Render Kartu Soal
+    // isLocked = true berarti soal sudah dijawab (dari history atau baru saja dijawab)
+    function renderCard(index, isLocked, recordData) {
+        const qData = questions[index];
+        const feed = document.getElementById("game-feed");
+        
+        const card = document.createElement("div");
+        card.className = "card";
+        card.id = `card-${index}`;
+
+        let html = `
+            <div class="q-type">${qData.type} (Soal ${index + 1})</div>
+            <div class="q-hint">${qData.hint}</div>
+            <div class="q-text">${qData.q}</div>
+            <div class="input-area" id="input-area-${index}"></div>
+        `;
+
+        card.innerHTML = html;
+        feed.appendChild(card);
+
+        const inputArea = card.querySelector(".input-area");
+
+        // Pembentukan UI Input
+        if (qData.type === TYPE_PINYIN) {
+            const optDiv = document.createElement("div");
+            optDiv.className = "options-container";
+            qData.options.forEach((opt, idx) => {
+                let btn = document.createElement("button");
+                btn.innerText = opt;
+                
+                // Jika Card Terkunci, disable tombol dan beri warna pada jawaban yang dipilih
+                if (isLocked) {
+                    btn.disabled = true;
+                    if (recordData && recordData.rawVal === idx) {
+                        if (recordData.isCorrect === true) {
+                            btn.style.backgroundColor = "var(--success)";
+                            btn.style.color = "white";
+                        } else {
+                            btn.style.backgroundColor = "var(--danger)";
+                            btn.style.color = "white";
+                        }
+                    }
+                } else {
+                    btn.addEventListener("click", function() {
+                        processAnswer(index, idx, opt, btn, card);
+                    });
+                }
+                optDiv.appendChild(btn);
+            });
+            inputArea.appendChild(optDiv);
+        } else {
+            let input = document.createElement("input");
+            input.type = "text";
+            input.placeholder = "Ketik Hanzi di sini...";
+            input.autocomplete = "off";
+            
+            let btn = document.createElement("button");
+            btn.className = "primary-btn";
+            btn.innerText = "Kirim Jawaban";
+            
+            if (isLocked) {
+                input.value = recordData ? recordData.displayVal : "";
+                input.disabled = true;
+                btn.style.display = "none";
+            } else {
+                btn.addEventListener("click", function() {
+                    if(input.value.trim() !== "") {
+                        processAnswer(index, input.value, input.value, btn, card);
+                    }
+                });
+                
+                input.addEventListener("keypress", (e) => {
+                    if (e.key === "Enter" && input.value.trim() !== "") {
+                        e.preventDefault();
+                        btn.click();
+                    }
+                });
+            }
+
+            inputArea.appendChild(input);
+            if (!isLocked) inputArea.appendChild(btn);
+        }
+
+        // Tampilkan Feedback Box jika dalam mode Terkunci (Sudah dijawab)
+        if (isLocked && recordData) {
+            inputArea.classList.add("disabled-element");
+            let fbBox = document.createElement("div");
+            fbBox.className = "feedback-box";
+            fbBox.style.display = "block";
+
+            if (recordData.isCorrect === "neutral") {
+                fbBox.classList.add("fb-neutral");
+                fbBox.innerHTML = `Jawaban Tersimpan.<br><span style="font-size:0.9rem; font-weight:normal; display:block; margin-top:5px;">Saran pola kalimat: ${qData.ans[0]}</span>`;
+            } else if (recordData.isCorrect === true) {
+                fbBox.classList.add("fb-correct");
+                fbBox.innerHTML = "✔ Jawaban Tepat!";
+            } else {
+                fbBox.classList.add("fb-wrong");
+                let correctStr = (qData.type === TYPE_PINYIN) ? qData.options[qData.ans] : qData.ans[0];
+                fbBox.innerHTML = `✘ Kurang Tepat. Jawaban yang benar: <br><span style="color:#000;">${correctStr}</span>`;
+            }
+            card.appendChild(fbBox);
+        }
+        
+        // Auto Scroll ke soal terbaru saja jika tidak dari load awal
+        if (!isLocked) {
+            setTimeout(() => {
+                try { card.scrollIntoView({ behavior: 'smooth', block: 'center' }); } 
+                catch (e) { window.scrollTo(0, document.body.scrollHeight); }
+            }, 150);
+        }
+    }
+
+    // Evaluasi Jawaban & Pembaruan State
+    function processAnswer(qIndex, rawVal, displayVal, triggerElement, cardElement) {
+        const qData = questions[qIndex];
+        
+        let isCorrect = false;
+        let isNeutral = (qData.type === TYPE_TRANS);
+
+        if (isNeutral) {
+            isCorrect = "neutral";
+        } else {
+            if (qData.type === TYPE_PINYIN) {
+                isCorrect = (rawVal === qData.ans);
+            } else {
+                const normalizedInput = normalizeText(displayVal);
+                const acceptedAnswers = qData.ans.map(normalizeText);
+                isCorrect = acceptedAnswers.includes(normalizedInput);
+            }
+            if (isCorrect === true) state.score++;
+        }
+
+        const record = {
+            qIndex: qIndex,
+            rawVal: rawVal,
+            displayVal: displayVal,
+            isCorrect: isCorrect
+        };
+
+        state.history.push(record);
+        state.currentQ++;
+        saveSession(); // Simpan progres ke memory browser
+
+        // Segarkan ulang seluruh UI (Mengunci card lama, membuat card baru di bawahnya)
+        renderAll();
+    }
+
+    function showSummary() {
+        document.getElementById("progress-text").innerText = "Latihan Selesai! Semua Progres Tersimpan.";
+        
+        const reviewCont = document.getElementById("review-container");
+        reviewCont.style.display = "block";
+        
+        const totalGraded = questions.filter(q => q.type !== TYPE_TRANS).length;
+        document.getElementById("final-score").innerText = `${state.score} / ${totalGraded}`;
+
+        const reviewList = document.getElementById("review-list");
+        reviewList.innerHTML = "";
+
+        state.history.forEach(record => {
+            const qData = questions[record.qIndex];
+            const itemDiv = document.createElement("div");
+            itemDiv.className = "review-item";
+
+            let statusHtml = "";
+            let correctAnsText = "";
+
+            if (record.isCorrect === "neutral") {
+                statusHtml = `<span class="r-neutral">◆ Tinjauan Terjemahan</span>`;
+                correctAnsText = `Saran kalimat: ${qData.ans.join(" / ")}`;
+            } else if (record.isCorrect === true) {
+                statusHtml = `<span class="r-correct">✔ Benar</span>`;
+            } else {
+                statusHtml = `<span class="r-wrong">✘ Salah</span>`;
+                let correctStr = (qData.type === TYPE_PINYIN) ? qData.options[qData.ans] : qData.ans[0];
+                correctAnsText = `Jawaban seharusnya: ${correctStr}`;
+            }
+
+            itemDiv.innerHTML = `
+                <div class="q-type" style="font-size:0.8rem; margin-bottom:5px;">${qData.type}</div>
+                <div class="r-q">${record.qIndex + 1}. ${qData.q}</div>
+                <div class="r-ans">Jawaban Anda: <strong>${record.displayVal}</strong> &nbsp; ${statusHtml}</div>
+                ${correctAnsText ? `<div class="r-correct-ans">${correctAnsText}</div>` : ''}
+            `;
+            reviewList.appendChild(itemDiv);
+        });
+
+        setTimeout(() => {
+            try { reviewCont.scrollIntoView({ behavior: 'smooth', block: 'start' }); } 
+            catch (e) { window.scrollTo(0, document.body.scrollHeight); }
+        }, 200);
+    }
+</script>
+
+</body>
+</html>

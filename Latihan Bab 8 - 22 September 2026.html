@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>第八課：坐火車去臺南 (Latihan Bab 8)</title>
+    <style>
+        :root {
+            --primary: #4A90E2;
+            --secondary: #50E3C2;
+            --dark: #333333;
+            --light: #F8F9FA;
+            --danger: #E74C3C;
+            --success: #2ECC71;
+            --neutral: #F39C12;
+            --bg: #eef2f5;
+        }
+        
+        html, body {
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+            font-family: 'PingFang TC', 'Microsoft JhengHei', 'Segoe UI', sans-serif;
+            background-color: var(--bg);
+            color: var(--dark);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        .header {
+            background-color: white;
+            padding: 15px 20px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header h1 {
+            color: var(--primary);
+            margin: 0 0 5px 0;
+            font-size: 1.4rem;
+        }
+
+        #ios-warning {
+            background-color: var(--danger);
+            color: white;
+            padding: 15px;
+            margin: 15px;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 0.95rem;
+            line-height: 1.4;
+            display: none;
+        }
+
+        .notice-box {
+            max-width: 760px;
+            margin: 15px auto;
+            padding: 12px 15px;
+            background-color: #fff3cd;
+            color: #856404;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            text-align: center;
+            line-height: 1.4;
+            display: none; /* Hanya muncul saat sesi listening */
+        }
+
+        #game-feed {
+            max-width: 800px;
+            margin: 10px auto;
+            padding: 0 15px 50px 15px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            padding: 25px;
+            margin-bottom: 25px;
+            position: relative;
+            animation: fadeIn 0.4s ease-in-out;
+            transition: all 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .q-type {
+            font-size: 0.85rem;
+            color: white;
+            background-color: var(--primary);
+            padding: 6px 12px;
+            border-radius: 6px;
+            display: inline-block;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .q-hint {
+            font-size: 0.95rem;
+            color: #666;
+            margin-bottom: 15px;
+            font-style: italic;
+            line-height: 1.4;
+        }
+
+        .q-text {
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            line-height: 1.4;
+            color: #222;
+        }
+
+        /* Khusus tombol audio */
+        .audio-ctrl-box {
+            background-color: #f1f7ff;
+            border: 1px solid #d0e3ff;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .audio-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 20px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            width: auto;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            touch-action: manipulation;
+        }
+        
+        .audio-btn:active {
+            transform: scale(0.96);
+        }
+
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        button.opt-btn {
+            padding: 16px;
+            font-size: 1.15rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            background-color: #fff;
+            color: var(--dark);
+            font-family: inherit;
+            width: 100%;
+            text-align: left;
+            -webkit-appearance: none;
+            appearance: none;
+            touch-action: manipulation;
+            user-select: none;
+            transition: background-color 0.2s, transform 0.1s;
+        }
+
+        button.opt-btn:active:not(:disabled) {
+            background-color: #f0f0f0;
+            transform: scale(0.98);
+        }
+
+        button.primary-btn { 
+            background-color: var(--primary); 
+            color: white; 
+            border: none; 
+            font-weight: bold; 
+            margin-top: 15px;
+            padding: 16px;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            width: 100%;
+        }
+
+        input[type="text"] {
+            padding: 16px;
+            font-size: 1.15rem;
+            width: calc(100% - 36px);
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-family: inherit;
+            margin-bottom: 10px;
+            -webkit-appearance: none;
+            appearance: none;
+            color: var(--dark);
+        }
+        
+        input[type="text"]:focus {
+            border-color: var(--primary);
+            outline: none;
+        }
+
+        .feedback-box {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 1.05rem;
+            display: none;
+            line-height: 1.5;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .fb-correct { background-color: #d5f5e3; color: #1e8449; border-left: 4px solid #1e8449; }
+        .fb-wrong { background-color: #fadbd8; color: #c0392b; border-left: 4px solid #c0392b; }
+        .fb-neutral { background-color: #fcf3cf; color: #b9770e; border-left: 4px solid #b9770e; }
+
+        .transcript-box {
+            margin-top: 12px;
+            padding: 12px;
+            background-color: rgba(255,255,255,0.7);
+            border-radius: 6px;
+            font-size: 0.95rem;
+            color: #333;
+        }
+
+        .disabled-element {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+
+        #review-container {
+            max-width: 800px;
+            margin: 20px auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            padding: 30px 20px;
+            display: none;
+        }
+
+        .review-item {
+            border-bottom: 1px solid #eee;
+            padding: 18px 0;
+        }
+
+        .review-item:last-child { border-bottom: none; }
+        .r-q { font-weight: bold; font-size: 1.15rem; margin-bottom: 8px; color: #222; }
+        .r-ans { margin-bottom: 5px; font-size: 1.05rem; color: #444;}
+        .r-correct-ans { font-size:0.95rem; color:#555; background:#f9f9f9; padding:10px; border-radius:6px; margin-top:8px;}
+
+    </style>
+</head>
+<body ontouchstart="">
+
+    <div class="header">
+        <h1>第八課：坐火車去臺南</h1>
+        <div id="progress-text" style="color: #666; font-weight: bold; font-size: 0.95rem;">Memuat Data...</div>
+    </div>
+
+    <!-- Peringatan WebView IOS -->
+    <div id="ios-warning">
+        ⚠️ Buka file ini menggunakan aplikasi <b>Safari</b> agar tombol berfungsi optimal. Tekan tombol Bagikan/Share lalu pilih "Open in Safari".
+    </div>
+    
+    <div class="notice-box" id="listening-notice">
+        💡 <b>Petunjuk Menyimak:</b> Tekan tombol speaker untuk mendengarkan percakapan. Pastikan perangkat Anda tidak dalam mode hening (*Silent/Mute*) dan volume media aktif.
+    </div>
+
+    <div id="game-feed"></div>
+
+    <div id="review-container">
+        <h2 style="color: var(--primary); text-align: center;">Ringkasan Evaluasi Bab 8</h2>
+        <h1 id="final-score" style="text-align: center; color: var(--dark); font-size: 3.5rem; margin: 15px 0;"></h1>
+        <p style="text-align: center; color: #777; font-size: 0.95rem; margin-bottom:25px; line-height:1.5;">*Skor di atas tidak termasuk bagian Terjemahan Kontekstual.<br>Silakan tinjau ulang jawaban Anda di bawah ini.</p>
+        <div id="review-list"></div>
+        <button id="btn-restart" class="primary-btn" style="margin-top: 30px;">Hapus Data & Ulangi Latihan</button>
+    </div>
+
+<script>
+    const TYPE_REORDER = "Menyusun Kata";
+    const TYPE_PINYIN = "Identifikasi Nada Pinyin";
+    const TYPE_CLOZE = "Isian Tata Bahasa";
+    const TYPE_TRANS = "Terjemahan Kontekstual";
+    const TYPE_LISTEN = "Latihan Menyimak";
+
+    const SESSION_KEY = "mandarin_bab8_full_progress";
+
+    const questions = [
+        // --- 1-6: Sentence Reordering ---
+        { type: TYPE_REORDER, hint: "Susun kata acak ini menjadi kalimat yang benar.", q: "去 / 朋友 / 我 / 臺南 / 想 / 跟 / 玩", ans: ["我想跟朋友去臺南玩"] },
+        { type: TYPE_REORDER, hint: "Susun kata acak ini menjadi kalimat yang benar.", q: "火車 / 坐 / 慢 / 太 / 了", ans: ["坐火車太慢了"] },
+        { type: TYPE_REORDER, hint: "Susun kata acak ini menjadi kalimat yang benar.", q: "高鐵 / 舒服 / 快 / 坐 / 又 / 又", ans: ["坐高鐵又快又舒服"] },
+        { type: TYPE_REORDER, hint: "Susun kata acak ini menjadi kalimat yang benar.", q: "同學 / 去 / 跟 / 故宮 / 參觀 / 我要", ans: ["我要跟同學去參觀故宮"] },
+        { type: TYPE_REORDER, hint: "Susun kata acak ini menjadi kalimat yang benar.", q: "去 / 想 / 我 / 坐 / 捷運 / 比較 / 快", ans: ["我想坐捷運去比較快"] },
+        { type: TYPE_REORDER, hint: "Susun kata acak ini menjadi kalimat yang benar.", q: "騎機車 / 快 / 坐公車 / 比 / 嗎", ans: ["騎機車比坐公車快嗎"] },
+
+        // --- 7-12: Tone Identification ---
+        { type: TYPE_PINYIN, hint: "Pilih ejaan Pinyin dengan nada yang tepat.", q: "鐘頭 (Jam - durasi)", options: ["zhōngtóu", "zhòngtóu", "zhōngtou"], ans: 0 },
+        { type: TYPE_PINYIN, hint: "Pilih ejaan Pinyin dengan nada yang tepat.", q: "比較 (Lebih / Agak)", options: ["bǐjiào", "bījiào", "bìjiào"], ans: 0 },
+        { type: TYPE_PINYIN, hint: "Pilih ejaan Pinyin dengan nada yang tepat.", q: "舒服 (Nyaman)", options: ["shūfú", "shùfú", "shǔfú"], ans: 0 },
+        { type: TYPE_PINYIN, hint: "Pilih ejaan Pinyin dengan nada yang tepat.", q: "便利商店 (Minimarket)", options: ["biànlì shāngdiàn", "biānlì shāngdiàn", "biànlī shāngdiàn"], ans: 0 },
+        { type: TYPE_PINYIN, hint: "Pilih ejaan Pinyin dengan nada yang tepat.", q: "參觀 (Mengunjungi/Meninjau)", options: ["cānguān", "cánguān", "cānguǎn"], ans: 0 },
+        { type: TYPE_PINYIN, hint: "Pilih ejaan Pinyin dengan nada yang tepat.", q: "計程車 (Taksi)", options: ["jìchéngchē", "jīchéngchē", "jìchěngchē"], ans: 0 },
+
+        // --- 13-18: Grammar Cloze ---
+        { type: TYPE_CLOZE, hint: "Ketik 1 karakter Hanzi untuk mengisi bagian yang kosong.", q: "我常___哥哥去看棒球比賽。 (dengan/bersama)", ans: ["跟"] },
+        { type: TYPE_CLOZE, hint: "Ketik 1 karakter Hanzi untuk mengisi bagian yang kosong.", q: "請問這支新手機___麼上網？ (bagaimana)", ans: ["怎"] },
+        { type: TYPE_CLOZE, hint: "Ketik 1 karakter Hanzi untuk mengisi bagian yang kosong.", q: "今天___較熱，我們去游泳吧。 (lebih/lumayan)", ans: ["比"] },
+        { type: TYPE_CLOZE, hint: "Ketik 1 karakter Hanzi untuk mengisi bagian yang kosong.", q: "這家餐廳的菜，___便宜___好吃。 (dua karakteristik sekaligus)", ans: ["又"] },
+        { type: TYPE_CLOZE, hint: "Ketik 1 karakter Hanzi untuk mengisi bagian yang kosong.", q: "坐捷運___坐火車快。 (daripada/dibandingkan)", ans: ["比"] },
+        { type: TYPE_CLOZE, hint: "Ketik 1 karakter Hanzi untuk mengisi bagian yang kosong.", q: "他同學騎機車___他去故宮。 (memberi tumpangan/membonceng)", ans: ["載"] },
+
+        // --- 19-24: Active Translation ---
+        { type: TYPE_TRANS, hint: "Ketik terjemahan kalimat ini dalam Hanzi Tradisional.", q: "Tanyakan kepada teman Anda: 'Akhir pekan ini kamu ingin pergi ke mana?'", ans: ["這個週末你想去哪裡", "這個週末你要去哪裡"] },
+        { type: TYPE_TRANS, hint: "Ketik terjemahan kalimat ini dalam Hanzi Tradisional.", q: "Tanyakan: 'Bagaimana cara menuju ke sana?'", ans: ["怎麼去"] },
+        { type: TYPE_TRANS, hint: "Ketik terjemahan kalimat ini dalam Hanzi Tradisional.", q: "Katakan: 'Pemandangan di gunung lebih indah daripada di sini.'", ans: ["山上的風景比這裡漂亮", "山上的風景比這裡美"] },
+        { type: TYPE_TRANS, hint: "Ketik terjemahan kalimat ini dalam Hanzi Tradisional.", q: "Katakan: 'Sekolah kami lebih jauh daripada sekolah mereka.'", ans: ["我們學校比他們學校遠", "我們的學校比他們的學校遠"] },
+        { type: TYPE_TRANS, hint: "Ketik terjemahan kalimat ini dalam Hanzi Tradisional.", q: "Tanya teman: 'Apakah kamu sering pergi makan malam dengan siapa?'", ans: ["你常跟誰吃晚飯", "你常跟誰去吃晚飯"] },
+        { type: TYPE_TRANS, hint: "Ketik terjemahan kalimat ini dalam Hanzi Tradisional.", q: "Katakan: 'Saya mau naik MRT ke sana.'", ans: ["我想坐捷運去", "我要坐捷運去"] },
+
+        // --- 25-30: Listening Comprehension ---
+        {
+            type: TYPE_LISTEN,
+            dialog: "男：這個週末，我想跟朋友去臺南玩。\n女：你們怎麼去？坐火車還是高鐵？\n男：我想坐高鐵去，比較快。",
+            q: "請問，這位男士週末想怎麼去臺南？",
+            options: ["坐火車去", "坐高鐵去", "坐公車去"],
+            ans: 1
+        },
+        {
+            type: TYPE_LISTEN,
+            dialog: "女：聽說高鐵車票非常貴。\n男：高鐵車票有一點貴，但是坐高鐵又快又舒服。",
+            q: "關於高鐵，這位男士覺得怎麼樣？",
+            options: ["非常貴，可是不舒服", "有一點貴，可是又快又舒服", "很便宜，又快又舒服"],
+            ans: 1
+        },
+        {
+            type: TYPE_LISTEN,
+            dialog: "女：我不知道在哪裡買高鐵票。\n男：在高鐵站、網路上或是便利商店都可以。",
+            q: "請問，哪裡『不可以』買高鐵票？",
+            options: ["高鐵站", "圖書館", "便利商店"],
+            ans: 1
+        },
+        {
+            type: TYPE_LISTEN,
+            dialog: "女：安同，明天我們沒課，你想去哪裡？\n男：我要跟同學去參觀故宮博物院。",
+            q: "安同明天要去參觀什麼地方？",
+            options: ["大安KTV", "故宮博物院", "便利商店"],
+            ans: 1
+        },
+        {
+            type: TYPE_LISTEN,
+            dialog: "女：我想坐捷運去故宮，比較快。\n男：不行，到故宮沒有捷運。妳可以坐公車。",
+            q: "為什麼這位女士不能坐捷運去故宮？",
+            options: ["因為捷運太慢了", "因為她想坐計程車", "因為到故宮沒有捷運"],
+            ans: 2
+        },
+        {
+            type: TYPE_LISTEN,
+            dialog: "女：我要坐計程車去故宮。\n男：計程車太貴了！我坐公車。",
+            q: "男士覺得坐計程車怎麼樣？",
+            options: ["太慢了", "太貴了", "很舒服"],
+            ans: 1
+        }
+    ];
+
+    let state = {
+        currentQ: 0,
+        score: 0,
+        history: [] // Berisi { qIndex, rawVal, displayVal, isCorrect }
+    };
+
+    window.onload = function() {
+        var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+        var isSafari = /Safari/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent);
+        if(isIOS && !isSafari) {
+            document.getElementById("ios-warning").style.display = "block";
+        }
+
+        document.getElementById("btn-restart").addEventListener("click", function() {
+            sessionStorage.removeItem(SESSION_KEY);
+            location.reload();
+        });
+
+        const savedState = sessionStorage.getItem(SESSION_KEY);
+        if (savedState) {
+            try { state = JSON.parse(savedState); } catch(e) {}
+        }
+
+        renderAll();
+    };
+
+    function saveSession() {
+        sessionStorage.setItem(SESSION_KEY, JSON.stringify(state));
+    }
+
+    function normalizeText(txt) {
+        return txt.replace(/[\s。！？，、.!?]/g, '');
+    }
+
+    // Audio Player dengan Modulasi Suara
+    function playAudio(dialogText, btnElement) {
+        if (!('speechSynthesis' in window)) {
+            alert("Perangkat Anda tidak mendukung fitur pemutar suara otomatis.");
+            return;
+        }
+
+        window.speechSynthesis.cancel();
+
+        const lines = dialogText.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+        let lineIndex = 0;
+
+        btnElement.disabled = true;
+        btnElement.innerHTML = "🔊 Memutar...";
+
+        function speakNextLine() {
+            if (lineIndex >= lines.length) {
+                btnElement.disabled = false;
+                btnElement.innerHTML = "🔊 Putar Ulang";
+                return;
+            }
+
+            const currentLine = lines[lineIndex];
+            const utterance = new SpeechSynthesisUtterance(currentLine);
+            utterance.lang = 'zh-TW';
+            utterance.rate = 0.85;
+
+            // Modulasi Pitch
+            if (currentLine.startsWith("男")) {
+                utterance.pitch = 0.7;  
+            } else if (currentLine.startsWith("女")) {
+                utterance.pitch = 1.15; 
+            } else {
+                utterance.pitch = 1.0;
+            }
+
+            utterance.onend = function() {
+                lineIndex++;
+                setTimeout(speakNextLine, 350); 
+            };
+
+            utterance.onerror = function() {
+                btnElement.disabled = false;
+                btnElement.innerHTML = "🔊 Putar Audio";
+            };
+
+            window.speechSynthesis.speak(utterance);
+        }
+
+        speakNextLine();
+    }
+
+    function renderAll() {
+        const feed = document.getElementById("game-feed");
+        feed.innerHTML = ""; 
+
+        // Notifikasi Listening hanya jika ada soal listening aktif
+        const isListeningActive = questions[state.currentQ] && questions[state.currentQ].type === TYPE_LISTEN;
+        document.getElementById("listening-notice").style.display = isListeningActive ? "block" : "none";
+
+        state.history.forEach((record) => {
+            renderCard(record.qIndex, true, record);
+        });
+
+        if (state.currentQ < questions.length) {
+            renderCard(state.currentQ, false, null);
+            document.getElementById("progress-text").innerText = `Progres: Soal ${state.currentQ + 1} / ${questions.length}`;
+        } else {
+            showSummary();
+        }
+    }
+
+    function renderCard(index, isLocked, recordData) {
+        const qData = questions[index];
+        const feed = document.getElementById("game-feed");
+        
+        const card = document.createElement("div");
+        card.className = "card";
+        card.id = `card-${index}`;
+
+        // Header Card
+        let html = `<div class="q-type">${qData.type} (Soal ${index + 1})</div>`;
+        
+        // Komponen Soal berdasarkan Tipe
+        if (qData.type === TYPE_LISTEN) {
+            html += `
+                <div class="audio-ctrl-box">
+                    <button type="button" class="audio-btn" id="play-btn-${index}">🔊 Putar Audio</button>
+                </div>
+                <div class="q-text">${qData.q}</div>
+                <div class="options-container" id="input-area-${index}"></div>
+            `;
+        } else {
+            html += `
+                <div class="q-hint">${qData.hint}</div>
+                <div class="q-text">${qData.q}</div>
+                <div class="options-container" id="input-area-${index}"></div>
+            `;
+        }
+
+        card.innerHTML = html;
+        feed.appendChild(card);
+
+        const inputArea = card.querySelector(`#input-area-${index}`);
+
+        // Event Listener Audio untuk tipe Listening
+        if (qData.type === TYPE_LISTEN && !isLocked) {
+            const playBtn = card.querySelector(`#play-btn-${index}`);
+            playBtn.addEventListener("click", function() {
+                playAudio(qData.dialog, playBtn);
+            });
+        } else if (qData.type === TYPE_LISTEN && isLocked) {
+            const playBtn = card.querySelector(`#play-btn-${index}`);
+            playBtn.innerHTML = "🔊 Audio Selesai";
+            playBtn.disabled = true;
+            playBtn.style.backgroundColor = "#ccc";
+        }
+
+        // Pembentukan Input (Tombol Pilihan Ganda)
+        if (qData.type === TYPE_PINYIN || qData.type === TYPE_LISTEN) {
+            qData.options.forEach((opt, idx) => {
+                let btn = document.createElement("button");
+                btn.className = "opt-btn";
+                btn.innerText = opt;
+                
+                if (isLocked) {
+                    btn.disabled = true;
+                    if (recordData && recordData.rawVal === idx) {
+                        btn.style.backgroundColor = recordData.isCorrect ? "var(--success)" : "var(--danger)";
+                        btn.style.borderColor = recordData.isCorrect ? "var(--success)" : "var(--danger)";
+                        btn.style.color = "white";
+                    }
+                } else {
+                    btn.addEventListener("click", function() {
+                        processAnswer(index, idx, opt);
+                    });
+                }
+                inputArea.appendChild(btn);
+            });
+        } 
+        // Pembentukan Input (Text Box)
+        else {
+            let input = document.createElement("input");
+            input.type = "text";
+            input.placeholder = "Ketik jawaban di sini...";
+            input.autocomplete = "off";
+            
+            let btn = document.createElement("button");
+            btn.className = "primary-btn";
+            btn.innerText = "Kirim Jawaban";
+            
+            if (isLocked) {
+                input.value = recordData ? recordData.displayVal : "";
+                input.disabled = true;
+                btn.style.display = "none";
+            } else {
+                btn.addEventListener("click", function() {
+                    if(input.value.trim() !== "") {
+                        processAnswer(index, input.value, input.value);
+                    }
+                });
+                
+                input.addEventListener("keypress", (e) => {
+                    if (e.key === "Enter" && input.value.trim() !== "") {
+                        e.preventDefault();
+                        btn.click();
+                    }
+                });
+            }
+
+            inputArea.appendChild(input);
+            if (!isLocked) inputArea.appendChild(btn);
+        }
+
+        // Feedback Box (Hanya muncul jika sudah dijawab)
+        if (isLocked && recordData) {
+            inputArea.classList.add("disabled-element");
+            let fbBox = document.createElement("div");
+            fbBox.className = "feedback-box";
+            fbBox.style.display = "block";
+
+            if (recordData.isCorrect === "neutral") {
+                fbBox.classList.add("fb-neutral");
+                fbBox.innerHTML = `<b>Jawaban Tersimpan</b><br><span style="font-size:0.95rem; color:#666;">Saran pola kalimat: ${qData.ans[0]}</span>`;
+            } else if (recordData.isCorrect === true) {
+                fbBox.classList.add("fb-correct");
+                fbBox.innerHTML = "<b>✔ Jawaban Tepat!</b>";
+            } else {
+                fbBox.classList.add("fb-wrong");
+                let correctStr = (qData.type === TYPE_PINYIN || qData.type === TYPE_LISTEN) ? qData.options[qData.ans] : qData.ans[0];
+                fbBox.innerHTML = `<b>✘ Kurang Tepat</b><br><span style="color:#333; font-size:0.95rem;">Jawaban benar: ${correctStr}</span>`;
+            }
+
+            // Tambahan Transkrip khusus untuk Listening
+            if (qData.type === TYPE_LISTEN) {
+                fbBox.innerHTML += `<div class="transcript-box"><b>Transkrip Dialog:</b><br>${qData.dialog.replace(/\n/g, '<br>')}</div>`;
+            }
+
+            card.appendChild(fbBox);
+        }
+        
+        // Auto Scroll ke soal terbaru
+        if (!isLocked) {
+            setTimeout(() => {
+                try { card.scrollIntoView({ behavior: 'smooth', block: 'center' }); } 
+                catch (e) { window.scrollTo(0, document.body.scrollHeight); }
+            }, 200);
+        }
+    }
+
+    function processAnswer(qIndex, rawVal, displayVal) {
+        window.speechSynthesis.cancel(); // Matikan audio jika masih menyala
+        const qData = questions[qIndex];
+        
+        let isCorrect = false;
+        let isNeutral = (qData.type === TYPE_TRANS);
+
+        if (isNeutral) {
+            isCorrect = "neutral";
+        } else {
+            if (qData.type === TYPE_PINYIN || qData.type === TYPE_LISTEN) {
+                isCorrect = (rawVal === qData.ans);
+            } else {
+                const normalizedInput = normalizeText(displayVal);
+                const acceptedAnswers = qData.ans.map(normalizeText);
+                isCorrect = acceptedAnswers.includes(normalizedInput);
+            }
+            if (isCorrect === true) state.score++;
+        }
+
+        const record = {
+            qIndex: qIndex,
+            rawVal: rawVal,
+            displayVal: displayVal,
+            isCorrect: isCorrect
+        };
+
+        state.history.push(record);
+        state.currentQ++;
+        saveSession(); 
+        renderAll();
+    }
+
+    function showSummary() {
+        document.getElementById("progress-text").innerText = "Latihan Selesai! Semua Progres Tersimpan.";
+        document.getElementById("listening-notice").style.display = "none";
+        
+        const reviewCont = document.getElementById("review-container");
+        reviewCont.style.display = "block";
+        
+        const totalGraded = questions.filter(q => q.type !== TYPE_TRANS).length;
+        document.getElementById("final-score").innerText = `${state.score} / ${totalGraded}`;
+
+        const reviewList = document.getElementById("review-list");
+        reviewList.innerHTML = "";
+
+        state.history.forEach(record => {
+            const qData = questions[record.qIndex];
+            const itemDiv = document.createElement("div");
+            itemDiv.className = "review-item";
+
+            let statusHtml = "";
+            let correctAnsText = "";
+
+            if (record.isCorrect === "neutral") {
+                statusHtml = `<span style="color:var(--neutral); font-weight:bold;">◆ Saran</span>`;
+                correctAnsText = `Saran: <b>${qData.ans[0]}</b>`;
+            } else if (record.isCorrect === true) {
+                statusHtml = `<span class="r-correct">✔ Benar</span>`;
+            } else {
+                statusHtml = `<span class="r-wrong">✘ Salah</span>`;
+                let correctStr = (qData.type === TYPE_PINYIN || qData.type === TYPE_LISTEN) ? qData.options[qData.ans] : qData.ans[0];
+                correctAnsText = `Jawaban seharusnya: <b>${correctStr}</b>`;
+            }
+
+            let transcriptHtml = "";
+            if (qData.type === TYPE_LISTEN) {
+                transcriptHtml = `<div style="font-size:0.9rem; color:#555; background:#f4f7f9; padding:8px; border-radius:5px; margin-top:8px;"><b>Transkrip:</b><br>${qData.dialog.replace(/\n/g, '<br>')}</div>`;
+            }
+
+            itemDiv.innerHTML = `
+                <div class="q-type" style="font-size:0.75rem; padding:4px 8px; margin-bottom:8px;">${qData.type}</div>
+                <div class="r-q">${record.qIndex + 1}. ${qData.q}</div>
+                <div class="r-ans">Jawaban Anda: <b>${record.displayVal}</b> &nbsp; ${statusHtml}</div>
+                ${correctAnsText ? `<div class="r-correct-ans">${correctAnsText}</div>` : ''}
+                ${transcriptHtml}
+            `;
+            reviewList.appendChild(itemDiv);
+        });
+
+        setTimeout(() => {
+            try { reviewCont.scrollIntoView({ behavior: 'smooth', block: 'start' }); } 
+            catch (e) { window.scrollTo(0, document.body.scrollHeight); }
+        }, 300);
+    }
+</script>
+
+</body>
+</html>
