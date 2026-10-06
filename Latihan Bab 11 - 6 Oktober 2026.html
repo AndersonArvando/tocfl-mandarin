@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>第十一課：我要租房子 (Latihan Bab 11)</title>
+    <style>
+        :root {
+            --primary: #00796B;
+            --secondary: #009688;
+            --dark: #263238;
+            --light: #ECEFF1;
+            --danger: #D32F2F;
+            --success: #388E3C;
+            --warning: #F57C00;
+            --bg: #F4F7F6;
+        }
+        
+        html, body {
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+            font-family: 'PingFang TC', 'Microsoft JhengHei', 'Segoe UI', sans-serif;
+            background-color: var(--bg);
+            color: var(--dark);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        .header {
+            background-color: white;
+            padding: 15px 20px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header h1 {
+            color: var(--primary);
+            margin: 0 0 5px 0;
+            font-size: 1.4rem;
+        }
+
+        #ios-warning {
+            background-color: var(--warning);
+            color: white;
+            padding: 15px;
+            margin: 15px auto;
+            max-width: 770px;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 0.95rem;
+            line-height: 1.4;
+            display: none;
+        }
+
+        #game-feed {
+            max-width: 800px;
+            margin: 15px auto;
+            padding: 0 15px 50px 15px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            padding: 25px;
+            margin-bottom: 25px;
+            position: relative;
+            animation: fadeIn 0.4s ease-in-out;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .q-type {
+            font-size: 0.85rem;
+            color: white;
+            background-color: var(--primary);
+            padding: 6px 12px;
+            border-radius: 6px;
+            display: inline-block;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .q-hint {
+            font-size: 0.95rem;
+            color: #546E7A;
+            margin-bottom: 15px;
+            font-style: italic;
+            line-height: 1.4;
+            background: #E0F2F1;
+            padding: 10px 12px;
+            border-left: 4px solid var(--primary);
+            border-radius: 4px;
+        }
+
+        .q-text {
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            line-height: 1.5;
+            color: #263238;
+        }
+
+        .audio-ctrl-box {
+            background-color: #E0F2F1;
+            border: 1px solid #B2DFDB;
+            border-radius: 10px;
+            padding: 18px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .audio-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 14px 24px;
+            font-size: 1.15rem;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            touch-action: manipulation;
+            -webkit-appearance: none;
+            appearance: none;
+            user-select: none;
+        }
+        
+        .audio-btn:active:not(:disabled) {
+            transform: scale(0.97);
+            background-color: var(--secondary);
+        }
+
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        button.opt-btn {
+            padding: 16px;
+            font-size: 1.15rem;
+            border: 2px solid #CFD8DC;
+            border-radius: 10px;
+            background-color: #fff;
+            color: var(--dark);
+            font-family: inherit;
+            width: 100%;
+            text-align: left;
+            -webkit-appearance: none;
+            appearance: none;
+            touch-action: manipulation;
+            user-select: none;
+            transition: background-color 0.15s, transform 0.1s;
+        }
+
+        button.opt-btn:active:not(:disabled) {
+            background-color: #ECEFF1;
+            transform: scale(0.98);
+        }
+
+        button.primary-btn { 
+            background-color: var(--primary); 
+            color: white; 
+            border: none; 
+            font-weight: bold; 
+            margin-top: 15px;
+            padding: 16px;
+            border-radius: 10px;
+            font-size: 1.15rem;
+            width: 100%;
+            touch-action: manipulation;
+            -webkit-appearance: none;
+            appearance: none;
+            user-select: none;
+        }
+        
+        button.primary-btn:active:not(:disabled) {
+            transform: scale(0.98);
+            background-color: var(--secondary);
+        }
+
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 16px;
+            font-size: 1.15rem;
+            border: 2px solid #CFD8DC;
+            border-radius: 10px;
+            font-family: inherit;
+            margin-bottom: 10px;
+            -webkit-appearance: none;
+            appearance: none;
+            color: var(--dark);
+            box-sizing: border-box;
+        }
+        
+        input[type="text"]:focus, textarea:focus {
+            border-color: var(--primary);
+            outline: none;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .feedback-box {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 1.05rem;
+            display: none;
+            line-height: 1.5;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .fb-correct { background-color: #E8F5E9; color: #2E7D32; border-left: 4px solid var(--success); }
+        .fb-wrong { background-color: #FFEBEE; color: #C62828; border-left: 4px solid var(--danger); }
+        .fb-neutral { background-color: #FFF3E0; color: #E65100; border-left: 4px solid var(--warning); }
+
+        .transcript-box {
+            margin-top: 12px;
+            padding: 12px;
+            background-color: rgba(255,255,255,0.8);
+            border-radius: 6px;
+            font-size: 0.95rem;
+            color: #263238;
+        }
+
+        .disabled-element {
+            pointer-events: none;
+        }
+
+        #review-container {
+            max-width: 800px;
+            margin: 20px auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            padding: 30px 20px;
+            display: none;
+        }
+
+        .review-item {
+            border-bottom: 1px solid #ECEFF1;
+            padding: 18px 0;
+        }
+
+        .review-item:last-child { border-bottom: none; }
+        .r-q { font-weight: bold; font-size: 1.15rem; margin-bottom: 8px; color: #263238; }
+        .r-ans { margin-bottom: 5px; font-size: 1.05rem; color: #455A64;}
+        .r-correct-ans { font-size:0.95rem; color:#263238; background:#F4F7F6; padding:10px; border-radius:6px; margin-top:8px;}
+    </style>
+</head>
+<body ontouchstart="">
+
+    <div class="header">
+        <h1>第十一課：我要租房子</h1>
+        <div id="progress-text" style="color: #607D8B; font-weight: bold; font-size: 0.95rem;">Memuat Data...</div>
+    </div>
+
+    <div id="ios-warning">
+        ⚠️ Pastikan Anda membuka file ini di aplikasi <b>Safari</b> dan tombol mode hening (Silent/Mute) di samping iPhone tidak aktif agar suara dapat terdengar.
+    </div>
+
+    <div id="game-feed"></div>
+
+    <div id="review-container">
+        <h2 style="color: var(--primary); text-align: center;">Ringkasan Evaluasi Bab 11</h2>
+        <h1 id="final-score" style="text-align: center; color: var(--dark); font-size: 3.5rem; margin: 15px 0;"></h1>
+        <p style="text-align: center; color: #607D8B; font-size: 0.95rem; margin-bottom:25px; line-height:1.5;">*Skor di atas tidak termasuk bagian Active Translation yang ditinjau secara manual.</p>
+        <div id="review-list"></div>
+        <button id="btn-restart" class="primary-btn" style="margin-top: 30px; background-color: var(--danger);">Hapus Data & Ulangi Latihan</button>
+    </div>
+
+<script>
+    const TYPE_REORDER = "重組句子 - Menyusun Kata";
+    const TYPE_PINYIN = "選出正確的拼音 - Identifikasi Nada Pinyin";
+    const TYPE_CLOZE = "填空題 - Isian Rumpang Tata Bahasa";
+    const TYPE_TRANS = "Active Translation (Situational Production)";
+    const TYPE_LISTEN = "聽力測驗 - Latihan Mendengar";
+
+    const STORAGE_KEY = "mandarin_bab11_progress_v1";
+
+    function shuffleArray(array) {
+        let currentIndex = array.length, randomIndex;
+        while (currentIndex !== 0) {
+            randomIndex = Math.floor(Math.random() * currentIndex);
+            currentIndex--;
+            [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+        }
+        return array;
+    }
+
+    const questions_data = [
+        // 1-6: Sentence Reordering (重組句子)
+        {
+            type: TYPE_REORDER,
+            hint: "Susun kata: Di dekat sini ada supermarket dan stasiun MRT, jalan kaki lima menit langsung sampai.",
+            q: "就到了 / 附近 / 走路 / 有 / 五分鐘 / 超市和捷運站",
+            ans: ["附近有超市和捷運站走路五分鐘就到了", "走路五分鐘就到了附近有超市和捷運站"]
+        },
+        {
+            type: TYPE_REORDER,
+            hint: "Susun kata: Saya pulang untuk memikirkannya dulu, baru kemudian menelepon Anda.",
+            q: "給你 / 回去 / 我 / 再 / 想想 / 打電話",
+            ans: ["我回去想想再打電話給你"]
+        },
+        {
+            type: TYPE_REORDER,
+            hint: "Susun kata: Masih ada dua kamar kosong, satu adalah kamar mandi dalam (suite), satu lagi bukan.",
+            q: "一間不是 / 還有 / 空房間 / 兩間 / 是套房 / 一間",
+            ans: ["還有兩間空房間一間是套房一間不是"]
+        },
+        {
+            type: TYPE_REORDER,
+            hint: "Susun kata: Ada satu masalah, air dari pemanas air sepertinya tidak panas.",
+            q: "不熱 / 熱水器的 / 好像 / 有一個問題 / 水",
+            ans: ["有一個問題熱水器的水好像不熱", "熱水器的水好像不熱有一個問題"]
+        },
+        {
+            type: TYPE_REORDER,
+            hint: "Susun kata: Kemarin ada seorang bapak datang untuk memasang TV kabel.",
+            q: "有線電視 / 昨天 / 來 / 裝 / 有一個先生",
+            ans: ["昨天有一個先生來裝有線電視", "有一個先生昨天來裝有線電視"]
+        },
+        {
+            type: TYPE_REORDER,
+            hint: "Susun kata: Saya sangat sibuk, tidak datang membantu kamu memasang TV kabel lagi.",
+            q: "裝 / 我很忙 / 有線電視了 / 不來 / 幫你",
+            ans: ["我很忙不來幫你裝有線電視了"]
+        },
+
+        // 7-12: Tone Identification (Audio Only, distractors with similar letters & tones)
+        {
+            type: TYPE_PINYIN,
+            hint: "Dengarkan suara dengan saksama dan pilih ejaan Pinyin yang tepat (arti: dapur).",
+            audioText: "廚房",
+            q: "Pilih ejaan Pinyin yang sesuai dengan audio:",
+            options: ["chúfáng", "cúfāng", "chúhuáng", "zhúfáng"],
+            ans: "chúfáng"
+        },
+        {
+            type: TYPE_PINYIN,
+            hint: "Dengarkan suara dengan saksama dan pilih ejaan Pinyin yang tepat (arti: pemanas air).",
+            audioText: "熱水器",
+            q: "Pilih ejaan Pinyin yang sesuai dengan audio:",
+            options: ["rèshuǐqì", "lèsuǐqì", "rèshuǐjì", "ròushuǐqì"],
+            ans: "rèshuǐqì"
+        },
+        {
+            type: TYPE_PINYIN,
+            hint: "Dengarkan suara dengan saksama dan pilih ejaan Pinyin yang tepat (arti: terbiasa).",
+            audioText: "習慣",
+            q: "Pilih ejaan Pinyin yang sesuai dengan audio:",
+            options: ["xíguàn", "qíguǎn", "xīguāng", "shíguàn"],
+            ans: "xíguàn"
+        },
+        {
+            type: TYPE_PINYIN,
+            hint: "Dengarkan suara dengan saksama dan pilih ejaan Pinyin yang tepat (arti: ruang tamu).",
+            audioText: "客廳",
+            q: "Pilih ejaan Pinyin yang sesuai dengan audio:",
+            options: ["kètīng", "kètīn", "gètīng", "kèqīng"],
+            ans: "kètīng"
+        },
+        {
+            type: TYPE_PINYIN,
+            hint: "Dengarkan suara dengan saksama dan pilih ejaan Pinyin yang tepat (arti: kamar mandi).",
+            audioText: "浴室",
+            q: "Pilih ejaan Pinyin yang sesuai dengan audio:",
+            options: ["yùshì", "yùsì", "yìshì", "rùshì"],
+            ans: "yùshì"
+        },
+        {
+            type: TYPE_PINYIN,
+            hint: "Dengarkan suara dengan saksama dan pilih ejaan Pinyin yang tepat (arti: pemilik kos/rumah).",
+            audioText: "房東",
+            q: "Pilih ejaan Pinyin yang sesuai dengan audio:",
+            options: ["fángdōng", "huángdōng", "fándōng", "fángtōng"],
+            ans: "fángdōng"
+        },
+
+        // 13-18: Grammar Particle Cloze (填空題)
+        {
+            type: TYPE_CLOZE,
+            hint: "Ketik 1 karakter Hanzi yang menunjukkan waktu tempuh lebih cepat dari perkiraan (hanya butuh 5 menit langsung sampai).",
+            q: "這裡很方便，走路五分鐘___到了。",
+            ans: ["就"]
+        },
+        {
+            type: TYPE_CLOZE,
+            hint: "Ketik 1 karakter Hanzi untuk menyatakan urutan tindakan 'kemudian / baru setelah itu'.",
+            q: "我回去想想，___打電話給你。",
+            ans: ["再"]
+        },
+        {
+            type: TYPE_CLOZE,
+            hint: "Ketik 1 karakter Hanzi eksistensial untuk memperkenalkan subjek tak tentu di awal kalimat.",
+            q: "今天早上___一個小姐打電話給你。",
+            ans: ["有"]
+        },
+        {
+            type: TYPE_CLOZE,
+            hint: "Ketik 1 karakter Hanzi penanda negasi yang wajib dipasangkan di depan kata 有.",
+            q: "這間空房間現在___有人住。",
+            ans: ["沒"]
+        },
+        {
+            type: TYPE_CLOZE,
+            hint: "Ketik 1 karakter Hanzi kata kerja bantu yang menyatakan 'kemungkinan/akan' di masa mendatang.",
+            q: "熱水器的水不熱，今天晚上房東___去看看。",
+            ans: ["會"]
+        },
+        {
+            type: TYPE_CLOZE,
+            hint: "Ketik 2 karakter Hanzi kata penghubung yang berarti 'namun / akan tetapi'.",
+            q: "可以幫妳裝有線電視，______妳得自己付錢。",
+            ans: ["不過"]
+        },
+
+        // 19-24: Active Translation (Situational Production - Manual Review)
+        {
+            type: TYPE_TRANS,
+            hint: "Terjemahkan ke dalam 繁體字 (gunakan kata: 客廳, 廚房, 左邊, 右邊, 浴室).",
+            q: "Ini adalah ruang tamu, dapur berada di sebelah kiri, dan di sebelah kanan ada kamar mandi.",
+            ans: ["這裡是客廳，廚房在左邊，右邊有浴室"]
+        },
+        {
+            type: TYPE_TRANS,
+            hint: "Terjemahkan ke dalam 繁體字 (gunakan kata: 收到, 房租, 熱水器, 好像).",
+            q: "Pak pemilik kos, apakah Anda sudah menerima uang sewa kamar saya? Air dari pemanas air sepertinya tidak panas.",
+            ans: ["房東先生，你收到我的房租了嗎？熱水器的水好像不熱"]
+        },
+        {
+            type: TYPE_TRANS,
+            hint: "Terjemahkan ke dalam 繁體字 (gunakan kata: 間, 空房間, 套房, 上網).",
+            q: "Masih ada dua kamar kosong, satu di antaranya adalah kamar mandi dalam (suite) dan di dalamnya bisa mengakses internet.",
+            ans: ["還有兩間空房間，一間是套房，房間裡面可以上網"]
+        },
+        {
+            type: TYPE_TRANS,
+            hint: "Terjemahkan ke dalam 繁體字 (gunakan kata: 不好意思, 有事, 在家, 等).",
+            q: "Maaf, malam ini saya ada urusan. Besok sore jam dua saya tunggu Anda di rumah.",
+            ans: ["不好意思，今天晚上我有事。明天下午兩點我在家等你"]
+        },
+        {
+            type: TYPE_TRANS,
+            hint: "Terjemahkan ke dalam 繁體字 (gunakan kata: 裝, 有線電視, 不過, 自己, 付錢).",
+            q: "Bolehkah membantu saya memasang TV kabel? Boleh, namun kamu harus membayar uangnya sendiri.",
+            ans: ["請問可以幫我裝有線電視嗎？可以，不過你得自己付錢"]
+        },
+        {
+            type: TYPE_TRANS,
+            hint: "Terjemahkan ke dalam 繁體字 (gunakan struktur subjek eksistensial: 有沒有人... 來...).",
+            q: "Apakah ada orang yang mau datang ke rumah saya untuk menonton pertandingan basket akhir pekan ini?",
+            ans: ["這個週末有沒有人要來我家看籃球比賽"]
+        },
+
+        // 25-30: Listening Comprehension (聽力測驗)
+        {
+            type: TYPE_LISTEN,
+            hint: "Dengarkan percakapan antara pemilik kos (Pria) dan calon penyewa (Wanita), lalu pilih jawaban yang tepat.",
+            dialog: "男：白小姐，這裡是客廳，廚房在左邊，右邊有浴室。\n女：這間房子很不錯，附近方便嗎？\n男：很方便，附近有超市和捷運站，走路五分鐘就到了。",
+            q: "請問，從這間房子走路去捷運站要多久？",
+            options: ["五分鐘", "十五分鐘", "二十五分鐘"],
+            ans: "五分鐘"
+        },
+        {
+            type: TYPE_LISTEN,
+            hint: "Dengarkan percakapan berikut dan perhatikan fasilitas kamar serta keputusan penyewa.",
+            dialog: "女：請問現在還有空房間嗎？我想看套房。\n男：還有兩間空房間，不過只有一間是套房，裡面可以上網。\n女：好，我回去想想，明天再打電話給你。",
+            q: "關於這位女士想看的套房，哪一個是對的？",
+            options: ["房間裡面可以上網", "她今天已經付房租了", "房間裡面沒有浴室"],
+            ans: "房間裡面可以上網"
+        },
+        {
+            type: TYPE_LISTEN,
+            hint: "Dengarkan percakapan telepon antara penyewa (Wanita) dan pemilik kos (Pria).",
+            dialog: "女：喂，林先生，你收到我的房租了嗎？\n男：我已經收到了，謝謝。妳住得習慣嗎？\n女：習慣了，可是有一個問題，熱水器的水好像不熱。",
+            q: "這位女士為什麼打電話給林先生？",
+            options: ["因為熱水器的水好像不熱及確認房租", "因為她想請林先生幫她買新電視", "因為她下個月不租這間房子了"],
+            ans: "因為熱水器的水好像不熱及確認房租"
+        },
+        {
+            type: TYPE_LISTEN,
+            hint: "Dengarkan kesepakatan waktu kunjungan pemilik kos pada dialog berikut.",
+            dialog: "男：今天晚上八點我會去看看妳的熱水器，妳有空嗎？\n女：不好意思，今天晚上我有事。明天下午兩點可以嗎？\n男：沒關係，那我明天下午兩點到。",
+            q: "房東最後決定什麼時候去幫她看熱水器？",
+            options: ["明天下午兩點", "今天晚上八點", "明天晚上八點"],
+            ans: "明天下午兩點"
+        },
+        {
+            type: TYPE_LISTEN,
+            hint: "Dengarkan syarat pemasangan TV kabel yang disampaikan oleh pemilik kos.",
+            dialog: "女：房東先生，我想買電視，請問可以幫我裝有線電視嗎？\n男：可以，不過妳得自己付錢。\n女：好的，沒問題，謝謝你。",
+            q: "如果這位女士要裝有線電視，誰得付錢？",
+            options: ["這位女士自己得付錢", "房東先生會幫她付錢", "已經算在房租裡面，不用付錢"],
+            ans: "這位女士自己得付錢"
+        },
+        {
+            type: TYPE_LISTEN,
+            hint: "Dengarkan informasi mengenai telepon masuk di pagi hari.",
+            dialog: "男：如玉，今天早上有一個先生打電話給妳，問妳還想不想租學校後面的套房。\n女：謝謝，不過我已經租到林先生的房子了，走路去學校十分鐘就到了。",
+            q: "為什麼如玉不租學校後面的套房了？",
+            options: ["因為她已經租到林先生的房子了", "因為學校後面的套房太遠了", "因為那個先生不讓她裝有線電視"],
+            ans: "因為她已經租到林先生的房子了"
+        }
+    ];
+
+    let state = {
+        currentQ: 0,
+        score: 0,
+        history: []
+    };
+
+    window.onload = function() {
+        var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+        if (isIOS) {
+            document.getElementById("ios-warning").style.display = "block";
+        }
+
+        document.getElementById("btn-restart").addEventListener("click", function() {
+            if (confirm("Apakah Anda yakin ingin menghapus semua progres dan mengulang latihan dari awal?")) {
+                localStorage.removeItem(STORAGE_KEY);
+                location.reload();
+            }
+        });
+
+        const savedState = localStorage.getItem(STORAGE_KEY);
+        if (savedState) {
+            try { state = JSON.parse(savedState); } catch(e) {}
+        }
+
+        renderAll();
+    };
+
+    function saveSession() {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    function normalizeText(txt) {
+        return txt.replace(/[\s。！？，、.!?？!]/g, '');
+    }
+
+    function playAudio(text, btnElement, isDialog = false) {
+        if (!('speechSynthesis' in window)) {
+            alert("Perangkat Anda tidak mendukung pemutar suara otomatis. Silakan gunakan browser Safari atau Chrome.");
+            return;
+        }
+        window.speechSynthesis.cancel();
+        
+        btnElement.disabled = true;
+        btnElement.innerHTML = "🔊 Sedang memutar...";
+
+        if (isDialog) {
+            const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+            let lineIndex = 0;
+
+            function speakNextLine() {
+                if (lineIndex >= lines.length) {
+                    btnElement.disabled = false;
+                    btnElement.innerHTML = "🔊 Putar Ulang Percakapan";
+                    return;
+                }
+                const currentLine = lines[lineIndex];
+                const cleanLine = currentLine.replace(/^(男：|女：)/, '');
+                const utterance = new SpeechSynthesisUtterance(cleanLine);
+                utterance.lang = 'zh-TW';
+                utterance.rate = 0.85;
+
+                if (currentLine.startsWith("男")) {
+                    utterance.pitch = 0.7;  
+                } else if (currentLine.startsWith("女")) {
+                    utterance.pitch = 1.15; 
+                } else {
+                    utterance.pitch = 1.0;
+                }
+
+                utterance.onend = function() {
+                    lineIndex++;
+                    setTimeout(speakNextLine, 350); 
+                };
+                utterance.onerror = function() {
+                    btnElement.disabled = false;
+                    btnElement.innerHTML = "🔊 Putar Ulang Percakapan";
+                };
+                window.speechSynthesis.speak(utterance);
+            }
+            speakNextLine();
+        } else {
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'zh-TW';
+            utterance.rate = 0.8;
+            utterance.onend = function() {
+                btnElement.disabled = false;
+                btnElement.innerHTML = "🔊 Putar Ulang Kata";
+            };
+            utterance.onerror = function() {
+                btnElement.disabled = false;
+                btnElement.innerHTML = "🔊 Putar Ulang Kata";
+            };
+            window.speechSynthesis.speak(utterance);
+        }
+    }
+
+    function renderAll() {
+        const feed = document.getElementById("game-feed");
+        feed.innerHTML = ""; 
+
+        state.history.forEach((record) => {
+            renderCard(record.qIndex, true, record);
+        });
+
+        if (state.currentQ < questions_data.length) {
+            renderCard(state.currentQ, false, null);
+            document.getElementById("progress-text").innerText = `Progres: Soal ${state.currentQ + 1} / ${questions_data.length}`;
+        } else {
+            showSummary();
+        }
+    }
+
+    function renderCard(index, isLocked, recordData) {
+        const qData = questions_data[index];
+        const feed = document.getElementById("game-feed");
+        
+        const card = document.createElement("div");
+        card.className = "card";
+        card.id = `card-${index}`;
+
+        let html = `<div class="q-type">${qData.type} (Soal ${index + 1})</div>`;
+        html += `<div class="q-hint">${qData.hint}</div>`;
+        
+        if (qData.type === TYPE_PINYIN) {
+            html += `
+                <div class="audio-ctrl-box">
+                    <button type="button" class="audio-btn" id="play-btn-${index}">🔊 Putar Suara Kata</button>
+                </div>
+                <div class="q-text">${qData.q}</div>
+            `;
+        } else if (qData.type === TYPE_LISTEN) {
+            html += `
+                <div class="audio-ctrl-box">
+                    <button type="button" class="audio-btn" id="play-btn-${index}">🔊 Putar Percakapan</button>
+                </div>
+                <div class="q-text">${qData.q}</div>
+            `;
+        } else {
+            html += `<div class="q-text">${qData.q}</div>`;
+        }
+
+        html += `<div class="options-container" id="input-area-${index}"></div>`;
+        card.innerHTML = html;
+        feed.appendChild(card);
+
+        const inputArea = card.querySelector(`#input-area-${index}`);
+
+        // Event Audio tetap aktif meskipun soal sudah dijawab agar murid bisa mendengarkan ulang saat review
+        if (qData.type === TYPE_PINYIN) {
+            const playBtn = card.querySelector(`#play-btn-${index}`);
+            playBtn.addEventListener("click", () => playAudio(qData.audioText, playBtn, false));
+        } else if (qData.type === TYPE_LISTEN) {
+            const playBtn = card.querySelector(`#play-btn-${index}`);
+            playBtn.addEventListener("click", () => playAudio(qData.dialog, playBtn, true));
+        }
+
+        if (qData.options) {
+            let displayOptions = [];
+            if (isLocked && recordData && recordData.shuffledOptions) {
+                displayOptions = recordData.shuffledOptions;
+            } else {
+                displayOptions = shuffleArray([...qData.options]);
+            }
+
+            displayOptions.forEach((opt) => {
+                let btn = document.createElement("button");
+                btn.className = "opt-btn";
+                btn.innerText = opt;
+                
+                if (isLocked) {
+                    btn.disabled = true;
+                    if (recordData && recordData.rawVal === opt) {
+                        btn.style.backgroundColor = recordData.isCorrect ? "var(--success)" : "var(--danger)";
+                        btn.style.borderColor = recordData.isCorrect ? "var(--success)" : "var(--danger)";
+                        btn.style.color = "white";
+                    }
+                } else {
+                    btn.addEventListener("click", function() {
+                        processAnswer(index, opt, opt, displayOptions);
+                    });
+                }
+                inputArea.appendChild(btn);
+            });
+        } else {
+            let input = qData.type === TYPE_TRANS ? document.createElement("textarea") : document.createElement("input");
+            if (qData.type !== TYPE_TRANS) input.type = "text";
+            
+            input.placeholder = qData.type === TYPE_TRANS ? "Ketik kalimat terjemahan dalam Hanzi Tradisional..." : "Ketik jawaban Hanzi di sini...";
+            input.autocomplete = "off";
+            
+            let btn = document.createElement("button");
+            btn.className = "primary-btn";
+            btn.innerText = "Kirim Jawaban";
+            
+            if (isLocked) {
+                input.value = recordData ? recordData.displayVal : "";
+                input.disabled = true;
+                btn.style.display = "none";
+            } else {
+                btn.addEventListener("click", function() {
+                    if (input.value.trim() !== "") {
+                        processAnswer(index, input.value, input.value, null);
+                    }
+                });
+                
+                if (qData.type !== TYPE_TRANS) {
+                    input.addEventListener("keypress", (e) => {
+                        if (e.key === "Enter" && input.value.trim() !== "") {
+                            e.preventDefault();
+                            btn.click();
+                        }
+                    });
+                }
+            }
+
+            inputArea.appendChild(input);
+            if (!isLocked) inputArea.appendChild(btn);
+        }
+
+        if (isLocked && recordData) {
+            inputArea.classList.add("disabled-element");
+            let fbBox = document.createElement("div");
+            fbBox.className = "feedback-box";
+            fbBox.style.display = "block";
+
+            if (recordData.isCorrect === "neutral") {
+                fbBox.classList.add("fb-neutral");
+                fbBox.innerHTML = `<b>Jawaban Tersimpan (Penilaian Manual)</b><br><span style="font-size:0.95rem; color:#E65100;">Referensi kalimat: <b>${qData.ans[0]}</b></span>`;
+            } else if (recordData.isCorrect === true) {
+                fbBox.classList.add("fb-correct");
+                fbBox.innerHTML = "<b>✔ Jawaban Benar!</b>";
+            } else {
+                fbBox.classList.add("fb-wrong");
+                let correctStr = Array.isArray(qData.ans) ? qData.ans[0] : qData.ans;
+                fbBox.innerHTML = `<b>✘ Jawaban Kurang Tepat</b><br><span style="color:#C62828; font-size:0.95rem;">Jawaban yang benar: <b>${correctStr}</b></span>`;
+            }
+
+            if (qData.type === TYPE_LISTEN) {
+                fbBox.innerHTML += `<div class="transcript-box"><b>Transkrip Percakapan:</b><br>${qData.dialog.replace(/\n/g, '<br>')}</div>`;
+            } else if (qData.type === TYPE_PINYIN) {
+                fbBox.innerHTML += `<div class="transcript-box">Karakter dari audio tersebut adalah: <b>${qData.audioText}</b></div>`;
+            }
+
+            card.appendChild(fbBox);
+        }
+        
+        if (!isLocked) {
+            setTimeout(() => {
+                try { card.scrollIntoView({ behavior: 'smooth', block: 'center' }); } 
+                catch (e) { window.scrollTo(0, document.body.scrollHeight); }
+            }, 200);
+        }
+    }
+
+    function processAnswer(qIndex, rawVal, displayVal, shuffledOptionsArray) {
+        window.speechSynthesis.cancel(); 
+        const qData = questions_data[qIndex];
+        
+        let isCorrect = false;
+        let isNeutral = (qData.type === TYPE_TRANS);
+
+        if (isNeutral) {
+            isCorrect = "neutral";
+        } else {
+            if (qData.options) {
+                isCorrect = (rawVal === qData.ans);
+            } else {
+                const normalizedInput = normalizeText(displayVal);
+                const acceptedAnswers = qData.ans.map(normalizeText);
+                isCorrect = acceptedAnswers.includes(normalizedInput);
+            }
+            if (isCorrect === true) state.score++;
+        }
+
+        const record = {
+            qIndex: qIndex,
+            rawVal: rawVal,
+            displayVal: displayVal,
+            isCorrect: isCorrect,
+            shuffledOptions: shuffledOptionsArray
+        };
+
+        state.history.push(record);
+        state.currentQ++;
+        saveSession(); 
+        renderAll();
+    }
+
+    function showSummary() {
+        document.getElementById("progress-text").innerText = "Latihan Selesai! Semua Progres Tersimpan.";
+        
+        const reviewCont = document.getElementById("review-container");
+        reviewCont.style.display = "block";
+        
+        const totalGraded = questions_data.filter(q => q.type !== TYPE_TRANS).length;
+        document.getElementById("final-score").innerText = `${state.score} / ${totalGraded}`;
+
+        const reviewList = document.getElementById("review-list");
+        reviewList.innerHTML = "";
+
+        state.history.forEach(record => {
+            const qData = questions_data[record.qIndex];
+            const itemDiv = document.createElement("div");
+            itemDiv.className = "review-item";
+
+            let statusHtml = "";
+            let correctAnsText = "";
+
+            if (record.isCorrect === "neutral") {
+                statusHtml = `<span style="color:var(--warning); font-weight:bold;">◆ Tinjauan Manual</span>`;
+                correctAnsText = `Referensi jawaban: <b>${qData.ans[0]}</b>`;
+            } else if (record.isCorrect === true) {
+                statusHtml = `<span style="color:var(--success); font-weight:bold;">✔ Benar</span>`;
+            } else {
+                statusHtml = `<span style="color:var(--danger); font-weight:bold;">✘ Salah</span>`;
+                let correctStr = Array.isArray(qData.ans) ? qData.ans[0] : qData.ans;
+                correctAnsText = `Jawaban seharusnya: <b>${correctStr}</b>`;
+            }
+
+            let extraInfo = "";
+            if (qData.type === TYPE_LISTEN) {
+                extraInfo = `<div style="font-size:0.9rem; color:#263238; background:#ECEFF1; padding:10px; border-radius:6px; margin-top:10px;"><b>Transkrip:</b><br>${qData.dialog.replace(/\n/g, '<br>')}</div>`;
+            } else if (qData.type === TYPE_PINYIN) {
+                extraInfo = `<div style="font-size:0.9rem; color:#263238; background:#ECEFF1; padding:10px; border-radius:6px; margin-top:10px;">Karakter Audio: <b>${qData.audioText}</b></div>`;
+            }
+
+            itemDiv.innerHTML = `
+                <div class="q-type" style="font-size:0.75rem; padding:4px 8px; margin-bottom:8px;">${qData.type}</div>
+                <div class="r-q">${record.qIndex + 1}. ${qData.q}</div>
+                <div class="r-ans">Jawaban Anda: <b>${record.displayVal}</b> &nbsp; ${statusHtml}</div>
+                ${correctAnsText ? `<div class="r-correct-ans">${correctAnsText}</div>` : ''}
+                ${extraInfo}
+            `;
+            reviewList.appendChild(itemDiv);
+        });
+
+        setTimeout(() => {
+            try { reviewCont.scrollIntoView({ behavior: 'smooth', block: 'start' }); } 
+            catch (e) { window.scrollTo(0, document.body.scrollHeight); }
+        }, 300);
+    }
+</script>
+
+</body>
+</html>
